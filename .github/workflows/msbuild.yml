@@ -62,13 +62,13 @@ jobs:
           echo "${file_name}:\n```${hash_value}```\n" >> "$hash_file"
         done
         echo "::set-output name=hash_file::$hash_file"
-        cat hashes.txt
+        cat "${GITHUB_WORKSPACE}/hashes.txt"
 
     - name: Read Hashes from File
       id: read_hashes
       run: |
         cd "${GITHUB_WORKSPACE}/x64/Release"
-        hashes=$(cat "hashes.txt")
+        hashes=$(cat "${GITHUB_WORKSPACE}/hashes.txt")
         echo "::set-output name=hashes::${hashes}"
 
     - name: Create Release
@@ -82,6 +82,5 @@ jobs:
           ${{ steps.read_hashes.outputs.hashes }}
         files: |
           x64/Release/*
-          /RegistryHelper/RegistryHelper.h
         token: ${{ secrets.GITHUB_TOKEN }}
         append_body: false
