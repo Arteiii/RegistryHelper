@@ -41,16 +41,6 @@ jobs:
     - name: Set up Git
       run: git fetch --tags
 
-    - name: Get the latest tag
-      id: get_tag
-      run: |
-        latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
-        if [ -z "$latest_tag" ]; then
-          latest_tag="v0.1.0"  # Fallback tag if no tags exist
-        fi
-        echo "Latest tag: $latest_tag"
-        echo "TAG=$latest_tag" >> $GITHUB_ENV
-
     - name: Display release version
       run: |
         echo "Release version: ${{ env.TAG }}"
@@ -64,17 +54,14 @@ jobs:
     - name: Generate SHA256 hashes
       id: hashes
       run: |
-        declare -A processed_files
-        for file in x64/Release/*; do
+        cd x64/Release
+        hash_output=""
+        for file in *; do
           file_name=$(basename "$file")
-          if [ -z "${processed_files[$file_name]}" ]; then
-            echo "$file_name: $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
-            processed_files[$file_name]="processed"
-          fi
+          hash_output+="$(echo "$file_name: $(sha256sum "$file" | cut -d' ' -f1)")"$'\n'
         done
-        cat hashes.txt
-        echo "::set-output name=hashes::$(cat hashes.txt)"
-
+        echo "::set-output name=hashes::${hash_output}"
+        
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
