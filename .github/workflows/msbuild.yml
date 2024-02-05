@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - workflowTest
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -48,18 +48,24 @@ jobs:
         fi
         echo "Latest tag: $latest_tag"
         echo "TAG=$latest_tag" >> $GITHUB_ENV
-        
+
     - name: Display release version
       run: |
         echo "Release version: ${{ env.TAG }}"
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: lib-artifact
+        path: x64/Release
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ steps.get_tag.outputs.tag }}
-        files: |
-          x64/Release/*
+        tag_name: ${{ env.TAG }}
+        files: x64/Release/*
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Comment on Release
       run: |
