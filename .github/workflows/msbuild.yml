@@ -1,0 +1,78 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - workflowTest
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up MSVC
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build .lib file
+      run: |
+        msbuild /p:Configuration=Release /t:RegistryHelper /p:Platform=x64 RegistryHelper.sln
+
+    - name: Upload to Release
+    uses: actions/upload-artifact@v2
+    with:
+        name: lib-artifact
+        path: |
+        x64/Release/RegistryHelper.lib
+        x64/Release/RegistryHelper.pdb
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download .lib file
+      uses: actions/download-artifact@v2
+      with:
+        name: lib-artifact
+
+    - name: Generate SHA256 hashes
+      id: hashes
+      run: |
+        for file in lib-artifact/*; do
+          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hash.txt
+        done
+        echo "::set-output name=hashes::$(cat hash.txt)"
+
+    - name: Upload hashes to Release
+      uses: actions/upload-artifact@v2
+      with:
+        name: hash-artifact
+        path: hash.txt
+
+    - name: Display hashes
+      run: |
+        cat hash.txt
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          lib-artifact/*
+          hash-artifact/*
+        data: |
+          { "hashes": "${{ steps.hashes.outputs.hashes }}" }
+
+    - name: Comment on Release
+      run: |
+        echo "Release with hashes: ${{ steps.create_release.outputs.hashes }}" > release_message.txt
+        cat release_message.txt
+      env:
+        RELEASE_HASHES: ${{ steps.create_release.outputs.hashes }}
+        
+    - name: Comment on Release
+      run: |
+        gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt --title "Release Notes"
