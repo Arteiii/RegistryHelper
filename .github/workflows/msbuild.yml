@@ -60,11 +60,13 @@ jobs:
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
           echo "${file_name}:  ${hash_value}" >> hashes.txt
         done
+        cat hashes.txt
         echo "::set-output name=hash_file::hashes.txt"
 
     - name: Read Hashes from File
       id: read_hashes
       run: |
+        cd x64/Release
         hashes=$(cat ${{ steps.hashes.outputs.hash_file }})
         echo "::set-output name=hashes::${hashes}"
 
