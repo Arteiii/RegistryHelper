@@ -42,13 +42,13 @@ jobs:
     - name: Get the latest tag
       id: get_tag
       run: |
-        latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+        latest_tag=$(git tag -l --sort=-v:refname | head -n 1)
         if [ -z "$latest_tag" ]; then
           latest_tag="v0.1.0"  # Fallback tag if no tags exist
         fi
         echo "Latest tag: $latest_tag"
         echo "TAG=$latest_tag" >> $GITHUB_ENV
-
+        
     - name: Display release version
       run: |
         echo "Release version: ${{ env.TAG }}"
@@ -60,6 +60,7 @@ jobs:
         tag_name: ${{ steps.get_tag.outputs.tag }}
         files: |
           x64/Release/*
+
     - name: Comment on Release
       run: |
         echo "Release version: ${{ env.TAG }}" > release_message.txt
