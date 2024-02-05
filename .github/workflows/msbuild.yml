@@ -62,10 +62,10 @@ jobs:
     - name: Generate SHA256 hashes
       id: hashes
       run: |
-        for file in lib-artifact/*; do
-          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hash.txt
+        for file in x64/Release/*; do
+          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
         done
-        echo "::set-output name=hashes::$(cat hash.txt)"
+        echo "::set-output name=hashes::$(cat hashes.txt)"
 
     - name: Create Release
       id: create_release
