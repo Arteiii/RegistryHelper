@@ -64,22 +64,11 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.TAG }}
-        # name: "Custom Release Name"
-        body: |
-          Custom body content for the release.
-          Include any notable changes or information here.
+        name: "Release ${{ env.TAG }}"
+        # body: |
+        #   Custom body content for the release.
+        #   Include any notable changes or information here.
 
-          You can use multiple lines and markdown syntax.
+        #   You can use multiple lines and markdown syntax.
         files: x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Comment on Release
-      run: |
-        echo "Release version: ${{ env.TAG }}" > release_message.txt
-        cat release_message.txt
-      env:
-        RELEASE_VERSION: ${{ env.TAG }}
-
-    - name: Comment on Release
-      run: |
-        gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt
