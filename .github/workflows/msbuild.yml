@@ -64,10 +64,15 @@ jobs:
     - name: Generate SHA256 hashes
       id: hashes
       run: |
+        declare -A processed_files
         for file in x64/Release/*; do
-          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
+          file_name=$(basename "$file")
+          if [ -z "${processed_files[$file_name]}" ]; then
+            echo "$file_name: $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
+            processed_files[$file_name]="processed"
+          fi
         done
-        cat hashes.txt  # Debug print the content
+        cat hashes.txt
         echo "::set-output name=hashes::$(cat hashes.txt)"
 
     - name: Create Release
@@ -79,7 +84,7 @@ jobs:
         body: |
           **File Hashes:**
           ```
-          ${{ steps.generate_hashes.outputs.hashes }}
+          ${{ steps.hashes.outputs.hashes }}
           ```
         files: x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
