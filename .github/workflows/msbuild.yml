@@ -59,15 +59,16 @@ jobs:
         for file in *; do
           file_name=$(basename "$file")
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
-          echo "${file_name}:  ${hash_value}" >> "$hash_file"
+          echo "${file_name}:\n```${hash_value}```\n" >> "$hash_file"
         done
         echo "::set-output name=hash_file::$hash_file"
+        cat hashes.txt
 
     - name: Read Hashes from File
       id: read_hashes
       run: |
         cd "${GITHUB_WORKSPACE}/x64/Release"
-        hashes=$(cat "${GITHUB_WORKSPACE}/hashes.txt" 2>/dev/null || true)
+        hashes=$(cat "hashes.txt")
         echo "::set-output name=hashes::${hashes}"
 
     - name: Create Release
@@ -78,9 +79,7 @@ jobs:
         name: "Release ${{ env.TAG }}"
         body: |
           **File Hashes:**
-          ```
           ${{ steps.read_hashes.outputs.hashes }}
-          ```
         files: |
           x64/Release/*
           /RegistryHelper/RegistryHelper.h
