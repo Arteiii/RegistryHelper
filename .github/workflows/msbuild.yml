@@ -51,10 +51,9 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: ${{ steps.get_tag.outputs.tag }}
         files: |
           x64/Release/*
-        data: |
-          { "version": "v1.0.1" }
 
     - name: Comment on Release
       run: |
