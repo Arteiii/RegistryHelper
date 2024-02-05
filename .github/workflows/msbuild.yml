@@ -44,7 +44,8 @@ jobs:
       run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
 
     - name: Display release version
-      run: echo "Release version: ${{ steps.get_tag.outputs.tag }}"
+      run: |
+        echo "Release version: ${{ steps.get_tag.outputs.tag }}"
 
     - name: Create Release
       id: create_release
