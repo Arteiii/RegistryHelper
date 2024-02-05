@@ -37,20 +37,15 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Git
-      run: |
-        git config user.email "actions@github.com"
-        git config user.name "GitHub Actions"
-        git tag -a v1.0.0 -m "Version 1.0.0"
-        git push origin v1.0.0
+      run: git fetch --tags
 
-    - name: Set up GitHub CLI
-      uses: actions/setup-gh@v0
-      with:
-        gh-version: 2
+    - name: Get the latest tag
+      id: get_tag
+      run: echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
 
     - name: Display release version
       run: |
-        echo "Release version: v1.0.0"
+        echo "Release version: v1.0.1"
 
     - name: Create Release
       id: create_release
@@ -59,14 +54,14 @@ jobs:
         files: |
           x64/Release/*
         data: |
-          { "version": "v1.0.0" }
+          { "version": "v1.0.1" }
 
     - name: Comment on Release
       run: |
-        echo "Release version: v1.0.0" > release_message.txt
+        echo "Release version: v1.0.1" > release_message.txt
         cat release_message.txt
       env:
-        RELEASE_VERSION: v1.0.0
+        RELEASE_VERSION: v1.0.1
         
     - name: Comment on Release
       run: |
