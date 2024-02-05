@@ -2,8 +2,6 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - workflowTest
     tags:
       - "v*.*.*"
 
@@ -59,7 +57,7 @@ jobs:
         for file in *; do
           file_name=$(basename "$file")
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
-          hashes="${hashes}${file_name}:\n \`\`\`${hash_value}\`\`\`\n"
+          hashes="${hashes}${file_name}:<br /> \`\`\`${hash_value}\`\`\` <br />"
         done
         echo "::set-output name=hashes::${hashes}"
 
