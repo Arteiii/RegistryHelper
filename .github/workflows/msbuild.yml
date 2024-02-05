@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - workflowTest
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -21,58 +21,56 @@ jobs:
         msbuild /p:Configuration=Release /t:RegistryHelper /p:Platform=x64 RegistryHelper.sln
 
     - name: Upload to Release
-    uses: actions/upload-artifact@v2
-    with:
+      uses: actions/upload-artifact@v2
+      with:
         name: lib-artifact
         path: |
-        x64/Release/RegistryHelper.lib
-        x64/Release/RegistryHelper.pdb
+          x64/Release/RegistryHelper.lib
+          x64/Release/RegistryHelper.pdb
 
   release:
     needs: build
     runs-on: ubuntu-latest
     
     steps:
-    - name: Download .lib file
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: git fetch --tags
+
+    - name: Display release version
+      run: |
+        echo "Release version: ${{ env.TAG }}"
+
+    - name: Download Artifact
       uses: actions/download-artifact@v2
       with:
         name: lib-artifact
+        path: x64/Release
 
     - name: Generate SHA256 hashes
       id: hashes
       run: |
-        for file in lib-artifact/*; do
-          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hash.txt
+        cd "${GITHUB_WORKSPACE}/x64/Release"
+        hashes=""
+        for file in *; do
+          file_name=$(basename "$file")
+          hash_value=$(sha256sum "$file" | cut -d' ' -f1)
+          hashes="${hashes}${file_name}:<br /> \`\`\`${hash_value}\`\`\` <br />"
         done
-        echo "::set-output name=hashes::$(cat hash.txt)"
-
-    - name: Upload hashes to Release
-      uses: actions/upload-artifact@v2
-      with:
-        name: hash-artifact
-        path: hash.txt
-
-    - name: Display hashes
-      run: |
-        cat hash.txt
+        echo "::set-output name=hashes::${hashes}"
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: ${{ env.TAG }}
+        name: "Release ${{ env.TAG }}"
+        body: |
+          ## File Hashes:
+          ${{ steps.hashes.outputs.hashes }}
         files: |
-          lib-artifact/*
-          hash-artifact/*
-        data: |
-          { "hashes": "${{ steps.hashes.outputs.hashes }}" }
-
-    - name: Comment on Release
-      run: |
-        echo "Release with hashes: ${{ steps.create_release.outputs.hashes }}" > release_message.txt
-        cat release_message.txt
-      env:
-        RELEASE_HASHES: ${{ steps.create_release.outputs.hashes }}
-        
-    - name: Comment on Release
-      run: |
-        gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt --title "Release Notes"
+          x64/Release/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        append_body: true
