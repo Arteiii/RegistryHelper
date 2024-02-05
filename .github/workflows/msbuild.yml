@@ -42,10 +42,10 @@ jobs:
         node-version: '14'
 
     - name: Install dependencies
-      run: npm install -g semantic-release@17
+      run: npm install -g semantic-release@17 @semantic-release/changelog
 
     - name: Configure semantic-release
-      run: npx semantic-release@17 --branch=main --ci=false
+      run: npx semantic-release@17 @semantic-release/changelog
 
     - name: Display release version
       run: cat .version
@@ -69,4 +69,3 @@ jobs:
     - name: Comment on Release
       run: |
         gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt --title "Release Notes"
-        
