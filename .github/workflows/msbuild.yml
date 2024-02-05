@@ -2,6 +2,8 @@ name: Build and Release
 
 on:
   push:
+    branches:
+      - workflowTest
     tags:
       - "v*.*.*"
 
@@ -66,6 +68,7 @@ jobs:
           echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
         done
         echo "::set-output name=hashes::$(cat hashes.txt)"
+        cat hashes.txt
 
     - name: Create Release
       id: create_release
@@ -75,9 +78,9 @@ jobs:
         name: "Release ${{ env.TAG }}"
         body: |
           **File Hashes:**
-          ```
+          \`\`\`
           $(cat x64/Release/hashes.txt)
-          ```
+          \`\`\`
         files: x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
         append_body: true
