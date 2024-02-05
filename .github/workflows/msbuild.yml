@@ -73,7 +73,7 @@ jobs:
         body: |
           **File Hashes:**
           ```
-          ${{ steps.hashes.outputs.hashes }}
+          ${{ env.HASHES }}
           ```
         files: |
           x64/Release/*
