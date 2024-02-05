@@ -59,11 +59,13 @@ jobs:
         name: lib-artifact
         path: x64/Release
 
-    - name: Generate hashes
+    - name: Generate SHA256 hashes
+      id: hashes
       run: |
-        cd x64/Release
-        sha256sum * > hashes.txt
-      working-directory: x64/Release
+        for file in lib-artifact/*; do
+          echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hash.txt
+        done
+        echo "::set-output name=hashes::$(cat hash.txt)"
 
     - name: Create Release
       id: create_release
