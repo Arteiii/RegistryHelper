@@ -78,9 +78,9 @@ jobs:
         name: "Release ${{ env.TAG }}"
         body: |
           **File Hashes:**
-          \`\`\`
-          $(cat x64/Release/hashes.txt)
-          \`\`\`
+          ```
+          ${{ steps.generate_hashes.outputs.hashes }}
+          ```
         files: x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
         append_body: true
