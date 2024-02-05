@@ -55,14 +55,14 @@ jobs:
       id: hashes
       run: |
         cd x64/Release
-        hash_array="["
+        hash_array=""
         for file in *; do
           file_name=$(basename "$file")
-          hash_array+="\"$file_name: $(sha256sum "$file" | cut -d' ' -f1)\","
+          hash_value=$(sha256sum "$file" | cut -d' ' -f1)
+          hash_array="${hash_array}${file_name}:${hash_value};"
         done
-        hash_array="${hash_array%,}"  # Remove trailing comma
-        hash_array+="]"
-        echo "::set-output name=hashes::${hash_array}"
+        echo "HASHES=${hash_array}" >> $GITHUB_ENV
+
         
     - name: Create Release
       id: create_release
@@ -75,6 +75,8 @@ jobs:
           ```
           ${{ steps.hashes.outputs.hashes }}
           ```
-        files: x64/Release/*
+        files: |
+          x64/Release/*
+          /RegistryHelper/RegistryHelper.h
         token: ${{ secrets.GITHUB_TOKEN }}
         append_body: false
