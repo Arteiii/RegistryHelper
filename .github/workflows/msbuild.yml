@@ -67,8 +67,8 @@ jobs:
         for file in x64/Release/*; do
           echo "$(basename "$file"): $(sha256sum "$file" | cut -d' ' -f1)" >> hashes.txt
         done
+        cat hashes.txt  # Debug print the content
         echo "::set-output name=hashes::$(cat hashes.txt)"
-        cat hashes.txt
 
     - name: Create Release
       id: create_release
@@ -83,4 +83,4 @@ jobs:
           ```
         files: x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        append_body: true
+        append_body: false
