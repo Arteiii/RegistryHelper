@@ -76,4 +76,4 @@ jobs:
 
     - name: Comment on Release
       run: |
-        gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt --title "Release Notes"
+        gh release upload ${{ github.repository }} ${{ steps.create_release.outputs.id }} release_message.txt -t "Release Notes for ${{ env.TAG }}"
