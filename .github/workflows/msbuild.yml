@@ -54,20 +54,20 @@ jobs:
     - name: Generate SHA256 hashes
       id: hashes
       run: |
-        cd x64/Release
+        cd "${GITHUB_WORKSPACE}/x64/Release"
+        hash_file="${GITHUB_WORKSPACE}/hashes.txt"
         for file in *; do
           file_name=$(basename "$file")
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
-          echo "${file_name}:  ${hash_value}" >> hashes.txt
+          echo "${file_name}:  ${hash_value}" >> "$hash_file"
         done
-        cat hashes.txt
-        echo "::set-output name=hash_file::hashes.txt"
+        echo "::set-output name=hash_file::$hash_file"
 
     - name: Read Hashes from File
       id: read_hashes
       run: |
-        cd x64/Release
-        hashes=$(cat ${{ steps.hashes.outputs.hash_file }})
+        cd "${GITHUB_WORKSPACE}/x64/Release"
+        hashes=$(cat "${GITHUB_WORKSPACE}/hashes.txt" 2>/dev/null || true)
         echo "::set-output name=hashes::${hashes}"
 
     - name: Create Release
