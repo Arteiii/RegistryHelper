@@ -55,15 +55,19 @@ jobs:
       id: hashes
       run: |
         cd x64/Release
-        hash_array=""
         for file in *; do
           file_name=$(basename "$file")
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
-          hash_array="${hash_array}${file_name}:  ${hash_value}"$'\n'
+          echo "${file_name}:  ${hash_value}" >> hashes.txt
         done
-        echo "::set-output name=hashes::${hash_array}"
+        echo "::set-output name=hash_file::hashes.txt"
 
-            
+    - name: Read Hashes from File
+      id: read_hashes
+      run: |
+        hashes=$(cat ${{ steps.hashes.outputs.hash_file }})
+        echo "::set-output name=hashes::${hashes}"
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
@@ -73,7 +77,7 @@ jobs:
         body: |
           **File Hashes:**
           ```
-          ${{ steps.hashes.outputs.hashes }}
+          ${{ steps.read_hashes.outputs.hashes }}
           ```
         files: |
           x64/Release/*
