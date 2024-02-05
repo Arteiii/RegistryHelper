@@ -61,7 +61,8 @@ jobs:
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
           hash_array="${hash_array}${file_name}:  ${hash_value}"$'\n'
         done
-        echo "HASHES=${hash_array}" >> $GITHUB_ENV
+        echo "::set-output name=hashes::${hash_array}"
+
             
     - name: Create Release
       id: create_release
@@ -72,7 +73,7 @@ jobs:
         body: |
           **File Hashes:**
           ```
-          ${{ env.HASHES }}
+          ${{ steps.hashes.outputs.hashes }}
           ```
         files: |
           x64/Release/*
