@@ -59,10 +59,10 @@ jobs:
         for file in *; do
           file_name=$(basename "$file")
           hash_value=$(sha256sum "$file" | cut -d' ' -f1)
-          hashes="${hashes}${file_name}:\n\`\`\`\n${hash_value}\n\`\`\`\n"
+          hashes="${hashes}${file_name}:\n \`\`\`${hash_value}\`\`\`\n"
         done
         echo "::set-output name=hashes::${hashes}"
-        
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
