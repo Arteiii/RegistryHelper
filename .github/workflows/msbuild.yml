@@ -68,9 +68,9 @@ jobs:
         tag_name: ${{ env.TAG }}
         name: "Release ${{ env.TAG }}"
         body: |
-          **File Hashes:**
+          ## File Hashes:
           ${{ steps.hashes.outputs.hashes }}
         files: |
           x64/Release/*
         token: ${{ secrets.GITHUB_TOKEN }}
-        append_body: false
+        append_body: true
