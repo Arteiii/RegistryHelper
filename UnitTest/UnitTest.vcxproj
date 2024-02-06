@@ -159,7 +159,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="TestRegistryHelper.cpp" />
-    <ClCompile Include="TestRegistryInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegistryHelper\RegistryHelper.vcxproj">
