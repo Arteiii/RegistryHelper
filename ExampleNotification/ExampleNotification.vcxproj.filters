@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TestRegistryHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestRegistryInterface.cpp">
+    <ClCompile Include="ExampleNotification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

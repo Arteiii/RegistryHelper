@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>

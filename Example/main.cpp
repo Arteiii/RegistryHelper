@@ -1,4 +1,5 @@
 #include "RegistryHelper.h"
+#include "RegistryInterface.h"
 #include <iostream>
 
 int
