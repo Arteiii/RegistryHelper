@@ -4,9 +4,7 @@ This project provides a `RegistryHelper` class for accessing the Windows Registr
 
 ## Project Structure
 
-The RegistryHelper project is organized as a .lib project.
-If you prefer, you can integrate it into your project as a library.
-Alternatively, you have the option to use the provided RegistryHelper.cpp and RegistryHelper.h files directly in your project.
+The RegistryHelper project is structured as a .lib project, offering flexibility for integration into your existing project. You also have the option to use the standalone RegistryHelper.cpp and RegistryHelper.h files directly in your project.
 
 ## Usage
 
@@ -38,17 +36,21 @@ DWORD dwordValue = registryHelper.RegGetDword(hKey, subKey, valueNameDword);
 
 // Example 2: Reading String value (REG_SZ)
 std::wstring valueNameString = L"CurrentUser";
-std::wstring stringValue = registryHelper.RegGetString(hKey, subKey, valueNameString);
+std::wstring stringValue =
+  registryHelper.RegGetString(hKey, subKey, valueNameString);
 
 // Example 3: Reading Multi-String value (REG_MULTI_SZ)
 std::wstring valueNameMultiString = L"PreshutdownOrder";
-std::vector<std::wstring> multiStringValue = registryHelper.RegGetMultiString(hKey, subKey, valueNameMultiString);
+std::vector<std::wstring> multiStringValue =
+  registryHelper.RegGetMultiString(hKey, subKey, valueNameMultiString);
 
 // Example 4: Enumerate sub-keys
-std::vector<std::pair<std::wstring, DWORD>> subKeys = registryHelper.RegEnumSubKeys(hKey, subKey);
+std::vector<std::pair<std::wstring, DWORD>> subKeys =
+  registryHelper.RegEnumSubKeys(hKey, subKey);
 
 // Example 5: Enumerate values
-std::vector<std::pair<std::wstring, DWORD>> values = registryHelper.RegEnumValues(hKey, subKey);
+std::vector<std::pair<std::wstring, DWORD>> values =
+  registryHelper.RegEnumValues(hKey, subKey);
 ```
 
 Adjust the registry keys, subkeys, and value names based on your specific use case.
