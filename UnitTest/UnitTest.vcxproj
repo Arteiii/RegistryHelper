@@ -143,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\RegistryInterface;..\RegistryHelper;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\RegistryHelper;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>
@@ -163,9 +163,6 @@
   <ItemGroup>
     <ProjectReference Include="..\RegistryHelper\RegistryHelper.vcxproj">
       <Project>{7144564f-fe5b-4b24-a6a9-c83f18969bbb}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\RegistryInterface\RegistryInterface.vcxproj">
-      <Project>{2abeff91-73bb-4467-b15d-f0923fffa7b7}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

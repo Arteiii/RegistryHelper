@@ -1,5 +1,7 @@
 #include "RegistryHelper.h"
 
+#include <memory>
+
 // Constructor initializes the error code to ERROR_SUCCESS
 RegistryHelper::RegistryHelper()
   : m_errorCode(ERROR_SUCCESS)
@@ -163,7 +165,7 @@ RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring& subKey)
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-      "RegQueryInfoKey failed while preparing for value enumeration.", retCode
+      "RegQueryInfoKey failed while preparing for value enumeration", retCode
     };
   }
 
@@ -243,7 +245,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-      "RegQueryInfoKey failed while preparing for value enumeration.", retCode
+      "RegQueryInfoKey failed while preparing for value enumeration", retCode
     };
   }
 
@@ -268,7 +270,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
     if (retCode != ERROR_SUCCESS) {
       // Handle error, close the key handle and throw an exception
       RegCloseKey(keyHandle);
-      throw RegistryError{ "Cannot enumerate values: RegEnumValue failed.",
+      throw RegistryError{ "Cannot enumerate values: RegEnumValue failed",
                            retCode };
     }
 

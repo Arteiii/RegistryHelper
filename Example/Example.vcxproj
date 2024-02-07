@@ -25,9 +25,6 @@
     <ProjectReference Include="..\RegistryHelper\RegistryHelper.vcxproj">
       <Project>{7144564f-fe5b-4b24-a6a9-c83f18969bbb}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\RegistryInterface\RegistryInterface.vcxproj">
-      <Project>{2abeff91-73bb-4467-b15d-f0923fffa7b7}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -130,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\RegistryHelper;..\RegistryInterface;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\RegistryHelper;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
