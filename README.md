@@ -6,28 +6,6 @@ This project provides a `RegistryHelper` class for accessing the Windows Registr
 
 The RegistryHelper project is structured as a .lib project, offering flexibility for integration into your existing project. You also have the option to use the standalone RegistryHelper.cpp and RegistryHelper.h files directly in your project.
 
-### RegistryHelper
-
-The RegistryHelper module encapsulates common operations related to the Windows Registry. It comprises the following files:
-
-RegistryHelper.cpp
-RegistryHelper.h
-
-### RegistryInterface
-
-The Interface module, consisting of Interface.cpp and Interface.h, 
-leverages the RegistryHelper library to retrieve essential information from the Windows Registry. 
-
-> HKEY_LOCAL_MACHINE\SOFTWARE:
-> Used to retrieve information about installed software and configuration settings.
-> 
-> HKEY_CURRENT_USER:
-> Contains configuration information for the current user, making it valuable for user-specific settings.
-> 
-> and more...
-
-This design allows for seamless integration of the Interface module, utilizing the capabilities of the RegistryHelper library to efficiently retrieve the required information from the Windows Registry.
-
 ## Usage
 
 ### Using as a Library
