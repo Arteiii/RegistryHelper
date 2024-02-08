@@ -283,3 +283,61 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
 
   return valueInfo;
 }
+
+void
+RegistryHelper::RegSetDword(HKEY hKey,
+                            const std::wstring& subKey,
+                            const std::wstring& value,
+                            DWORD data)
+{
+  m_errorCode = ::RegSetKeyValue(
+    hKey, subKey.c_str(), value.c_str(), REG_DWORD, &data, sizeof(data));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set DWORD value in registry.", m_errorCode);
+  }
+}
+
+void
+RegistryHelper::RegSetString(HKEY hKey,
+                             const std::wstring& subKey,
+                             const std::wstring& value,
+                             const std::wstring& data)
+{
+  m_errorCode =
+    ::RegSetKeyValue(hKey,
+                     subKey.c_str(),
+                     value.c_str(),
+                     REG_SZ,
+                     data.c_str(),
+                     static_cast<DWORD>((data.length() + 1) * sizeof(wchar_t)));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set string value in registry.", m_errorCode);
+  }
+}
+
+void
+RegistryHelper::RegSetMultiString(HKEY hKey,
+                                  const std::wstring& subKey,
+                                  const std::wstring& value,
+                                  const std::vector<std::wstring>& data)
+{
+  // Concatenate the strings and add an extra null character at the end
+  std::wstring multiString;
+  for (const auto& str : data) {
+    multiString += str;
+    multiString.push_back(L'\0');
+  }
+  multiString.push_back(L'\0'); // Extra null character at the end
+
+  m_errorCode = ::RegSetKeyValue(
+    hKey,
+    subKey.c_str(),
+    value.c_str(),
+    REG_MULTI_SZ,
+    multiString.c_str(),
+    static_cast<DWORD>(multiString.length() * sizeof(wchar_t)));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set multi-string value in registry.",
+                        m_errorCode);
+  }
+}
