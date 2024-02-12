@@ -34,5 +34,7 @@ jobs:
           git config --local user.name "GitHub Actions"
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
 
-          # Push changes to the current branch
-          git push origin HEAD
+      - name: Push changes to the current branch
+        run: |
+          current_branch=$(git rev-parse --abbrev-ref HEAD)
+          git push origin $current_branch
