@@ -36,20 +36,15 @@ public:
   std::vector<std::pair<std::wstring, DWORD>>
   RegEnumValues(HKEY hKey, const std::wstring &subKey);
 
-  void RegSetDword(HKEY hKey,
-                   const std::wstring& subKey,
-                   const std::wstring& value,
-                   DWORD data);
+  void RegSetDword(HKEY hKey, const std::wstring &subKey,
+                   const std::wstring &value, DWORD data);
 
-  void RegSetString(HKEY hKey,
-                    const std::wstring& subKey,
-                    const std::wstring& value,
-                    const std::wstring& data);
+  void RegSetString(HKEY hKey, const std::wstring &subKey,
+                    const std::wstring &value, const std::wstring &data);
 
-  void RegSetMultiString(HKEY hKey,
-                         const std::wstring& subKey,
-                         const std::wstring& value,
-                         const std::vector<std::wstring>& data);
+  void RegSetMultiString(HKEY hKey, const std::wstring &subKey,
+                         const std::wstring &value,
+                         const std::vector<std::wstring> &data);
 
 private:
   LONG m_errorCode; // store the last error code
