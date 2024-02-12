@@ -1,7 +1,8 @@
 name: Clang Format Checker and Auto-Fixer
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   clang-format-checking:
@@ -34,7 +35,6 @@ jobs:
           git config --local user.name "GitHub Actions"
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
 
-      - name: Push changes to the current branch
+      - name: Push changes to the pull request branch
         run: |
-          current_branch=$(git rev-parse --abbrev-ref HEAD)
-          git push origin $current_branch
+          git push origin HEAD:$GITHUB_HEAD_REF
