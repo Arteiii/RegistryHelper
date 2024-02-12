@@ -37,4 +37,4 @@ jobs:
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
 
       - name: Push changes to the pull request branch
-        run: git push origin HEAD:$GITHUB_HEAD_REF
+        run: git push HEAD:$GITHUB_HEAD_REF
