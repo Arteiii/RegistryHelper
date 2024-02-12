@@ -1,9 +1,7 @@
 #include "RegistryHelper.h"
 #include <iostream>
 
-int
-main()
-{
+int main() {
   try {
     RegistryHelper registryHelper;
     std::wstring subKey = L"SYSTEM\\CurrentControlSet\\Control";
@@ -23,7 +21,7 @@ main()
     std::wstring valueNameString = L"CurrentUser";
 
     std::wstring stringValue =
-      registryHelper.RegGetString(hKey, subKey, valueNameString);
+        registryHelper.RegGetString(hKey, subKey, valueNameString);
     std::wcout << L"String Value: " << stringValue << std::endl;
 
     //
@@ -32,10 +30,10 @@ main()
     std::wstring valueNameMultiString = L"PreshutdownOrder";
 
     std::vector<std::wstring> multiStringValue =
-      registryHelper.RegGetMultiString(hKey, subKey, valueNameMultiString);
+        registryHelper.RegGetMultiString(hKey, subKey, valueNameMultiString);
 
     std::wcout << L"Multi-String Values: " << std::endl;
-    for (const auto& str : multiStringValue) {
+    for (const auto &str : multiStringValue) {
       std::wcout << L"  " << str << std::endl;
     }
 
@@ -43,10 +41,10 @@ main()
     // Example 4: Enumerate sub-keys
     //
     std::vector<std::pair<std::wstring, DWORD>> subKeys =
-      registryHelper.RegEnumSubKeys(hKey, subKey);
+        registryHelper.RegEnumSubKeys(hKey, subKey);
 
     std::wcout << L"Sub-Keys: " << std::endl;
-    for (const auto& subKeyPair : subKeys) {
+    for (const auto &subKeyPair : subKeys) {
       std::wcout << L"  " << subKeyPair.first << std::endl;
     }
 
@@ -54,18 +52,17 @@ main()
     // Example 5: Enumerate values
     //
     std::vector<std::pair<std::wstring, DWORD>> values =
-      registryHelper.RegEnumValues(hKey, subKey);
+        registryHelper.RegEnumValues(hKey, subKey);
 
     std::wcout << L"Values: " << std::endl;
-    for (const auto& valuePair : values) {
+    for (const auto &valuePair : values) {
       std::wcout << L"  " << valuePair.first << L" (Type: " << valuePair.second
                  << L")" << std::endl;
     }
-
-  } catch (const RegistryError& ex) {
+  } catch (const RegistryError &ex) {
     std::cerr << "Registry Error: " << ex.what()
               << " (Error Code: " << ex.ErrorCode() << ")" << std::endl;
-  } catch (const std::exception& ex) {
+  } catch (const std::exception &ex) {
     std::cerr << "Error: " << ex.what() << std::endl;
   }
 

@@ -52,11 +52,6 @@ std::vector<std::pair<std::wstring, DWORD>> subKeys =
 std::vector<std::pair<std::wstring, DWORD>> values =
   registryHelper.RegEnumValues(hKey, subKey);
 
-// Set DWORD value under an existing key
-registryHelper.RegSetDword(HKEY_LOCAL_MACHINE,
-                           L"SOFTWARE\\YourApp",
-                           L"ExistingDWORD",
-                           42);
 
 // Set DWORD value under a non-existing key (will create the key first)
 registryHelper.RegSetDword(HKEY_LOCAL_MACHINE,
