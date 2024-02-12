@@ -24,6 +24,9 @@ jobs:
           && sudo apt update \
           && sudo apt install gh -y
 
+      - name: Fetch changes from the remote branch
+        run: git pull origin $GITHUB_HEAD_REF
+
       - name: Check and Auto-Fix Formatting
         run: |
           find . \( -name "*.h" -or -name "*.c" -or -name "*.cpp" -or -name "*.hpp" -or -name "*.cc" -or -name "*.cxx" -or -name "*.hxx" -or -name "*.inl" -or -name "*.ipp" \) \
@@ -36,5 +39,4 @@ jobs:
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
 
       - name: Push changes to the pull request branch
-        run: |
-          git push origin HEAD:$GITHUB_HEAD_REF
+        run: git push origin HEAD:$GITHUB_HEAD_REF
