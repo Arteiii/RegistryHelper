@@ -11,8 +11,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
       - name: Install Clang
         run: sudo apt-get update && sudo apt-get install -y clang
 
@@ -35,6 +37,4 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
-
-      - name: Push changes to the pull request branch
-        run: git push HEAD:$GITHUB_HEAD_REF
+          git push
