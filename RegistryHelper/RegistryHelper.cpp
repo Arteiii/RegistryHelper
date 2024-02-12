@@ -3,27 +3,17 @@
 #include <memory>
 
 // Constructor initializes the error code to ERROR_SUCCESS
-RegistryHelper::RegistryHelper()
-  : m_errorCode(ERROR_SUCCESS)
-{
-}
+RegistryHelper::RegistryHelper() : m_errorCode(ERROR_SUCCESS) {}
 
 // Read a DWORD value from the registry
 DWORD
-RegistryHelper::RegGetDword(HKEY hKey,
-                            const std::wstring& subKey,
-                            const std::wstring& value)
-{
+RegistryHelper::RegGetDword(HKEY hKey, const std::wstring &subKey,
+                            const std::wstring &value) {
   DWORD data{};
   DWORD dataSize = sizeof(data);
 
-  m_errorCode = ::RegGetValue(hKey,
-                              subKey.c_str(),
-                              value.c_str(),
-                              RRF_RT_REG_DWORD,
-                              nullptr,
-                              &data,
-                              &dataSize);
+  m_errorCode = ::RegGetValue(hKey, subKey.c_str(), value.c_str(),
+                              RRF_RT_REG_DWORD, nullptr, &data, &dataSize);
 
   if (m_errorCode != ERROR_SUCCESS) {
     // Throw a RegistryError exception if an error occurs
@@ -34,20 +24,12 @@ RegistryHelper::RegGetDword(HKEY hKey,
 }
 
 // Read a string value from the registry
-std::wstring
-RegistryHelper::RegGetString(HKEY hKey,
-                             const std::wstring& subKey,
-                             const std::wstring& value)
-{
+std::wstring RegistryHelper::RegGetString(HKEY hKey, const std::wstring &subKey,
+                                          const std::wstring &value) {
   // Retrieve the size of the string value data
   DWORD dataSize{};
-  m_errorCode = ::RegGetValue(hKey,
-                              subKey.c_str(),
-                              value.c_str(),
-                              RRF_RT_REG_SZ,
-                              nullptr,
-                              nullptr,
-                              &dataSize);
+  m_errorCode = ::RegGetValue(hKey, subKey.c_str(), value.c_str(),
+                              RRF_RT_REG_SZ, nullptr, nullptr, &dataSize);
 
   // Check if the value information retrieval was successful
   if (m_errorCode != ERROR_SUCCESS) {
@@ -58,13 +40,8 @@ RegistryHelper::RegGetString(HKEY hKey,
   std::vector<wchar_t> data(dataSize / sizeof(wchar_t));
 
   // Retrieve the actual string value data
-  m_errorCode = ::RegGetValue(hKey,
-                              subKey.c_str(),
-                              value.c_str(),
-                              RRF_RT_REG_SZ,
-                              nullptr,
-                              data.data(),
-                              &dataSize);
+  m_errorCode = ::RegGetValue(hKey, subKey.c_str(), value.c_str(),
+                              RRF_RT_REG_SZ, nullptr, data.data(), &dataSize);
 
   // Check if the value data retrieval was successful
   if (m_errorCode != ERROR_SUCCESS) {
@@ -80,19 +57,12 @@ RegistryHelper::RegGetString(HKEY hKey,
 
 // Read a multi-string value from the registry
 std::vector<std::wstring>
-RegistryHelper::RegGetMultiString(HKEY hKey,
-                                  const std::wstring& subKey,
-                                  const std::wstring& value)
-{
+RegistryHelper::RegGetMultiString(HKEY hKey, const std::wstring &subKey,
+                                  const std::wstring &value) {
   // Retrieve the size of the multi-string value data
   DWORD dataSize{};
-  m_errorCode = ::RegGetValue(hKey,
-                              subKey.c_str(),
-                              value.c_str(),
-                              RRF_RT_REG_MULTI_SZ,
-                              nullptr,
-                              nullptr,
-                              &dataSize);
+  m_errorCode = ::RegGetValue(hKey, subKey.c_str(), value.c_str(),
+                              RRF_RT_REG_MULTI_SZ, nullptr, nullptr, &dataSize);
 
   // Check if the value information retrieval was successful
   if (m_errorCode != ERROR_SUCCESS) {
@@ -103,13 +73,9 @@ RegistryHelper::RegGetMultiString(HKEY hKey,
   std::vector<wchar_t> data(dataSize / sizeof(wchar_t));
 
   // Retrieve the actual multi-string value data
-  m_errorCode = ::RegGetValue(hKey,
-                              subKey.c_str(),
-                              value.c_str(),
-                              RRF_RT_REG_MULTI_SZ,
-                              nullptr,
-                              data.data(),
-                              &dataSize);
+  m_errorCode =
+      ::RegGetValue(hKey, subKey.c_str(), value.c_str(), RRF_RT_REG_MULTI_SZ,
+                    nullptr, data.data(), &dataSize);
 
   // Check if the value data retrieval was successful
   if (m_errorCode != ERROR_SUCCESS) {
@@ -121,10 +87,10 @@ RegistryHelper::RegGetMultiString(HKEY hKey,
 
   // Parse the double-NUL-terminated string into a vector of wstrings
   std::vector<std::wstring> result;
-  const wchar_t* currStringPtr = data.data();
+  const wchar_t *currStringPtr = data.data();
   while (*currStringPtr != L'\0') {
     const size_t currStringLength = wcslen(currStringPtr);
-    result.push_back(std::wstring{ currStringPtr, currStringLength });
+    result.push_back(std::wstring{currStringPtr, currStringLength});
     currStringPtr += currStringLength + 1;
   }
 
@@ -133,8 +99,7 @@ RegistryHelper::RegGetMultiString(HKEY hKey,
 }
 
 std::vector<std::pair<std::wstring, DWORD>>
-RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring& subKey)
-{
+RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring &subKey) {
   HKEY keyHandle;
 
   // Open the specified key (root key or subkey)
@@ -151,8 +116,7 @@ RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring& subKey)
                                    nullptr, // No user-defined class
                                    nullptr, // No user-defined class size
                                    nullptr, // Reserved
-                                   &subKeyCount,
-                                   &maxSubKeyNameLen,
+                                   &subKeyCount, &maxSubKeyNameLen,
                                    nullptr, // No subkey class length
                                    nullptr, // No value count
                                    nullptr, // No value max length
@@ -165,56 +129,52 @@ RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring& subKey)
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-      "RegQueryInfoKey failed while preparing for value enumeration", retCode
-    };
+        "RegQueryInfoKey failed while preparing for value enumeration",
+        retCode};
+  };
+}
+
+// Allocate a buffer for storing subkey names
+maxSubKeyNameLen++;
+
+auto nameBuffer = std::make_unique<wchar_t[]>(maxSubKeyNameLen);
+
+// Vector to store pairs of subkey names and types
+std::vector<std::pair<std::wstring, DWORD>> subKeys;
+
+// Enumerate subkeys under the registry key
+for (DWORD index = 0; index < subKeyCount; index++) {
+  DWORD subKeyNameLen = maxSubKeyNameLen;
+
+  // Retrieve information about the specified subkey
+  retCode = ::RegEnumKeyEx(keyHandle, index, nameBuffer.get(), &subKeyNameLen,
+                           nullptr, // Reserved
+                           nullptr, // No class information
+                           nullptr, // No class size
+                           nullptr  // No last write time
+  );
+
+  // Check if the subkey information retrieval was successful
+  if (retCode != ERROR_SUCCESS) {
+    // Close the key handle and handle the error
+    RegCloseKey(keyHandle);
+    throw RegistryError{"Cannot get subkey info from the registry", retCode};
   }
 
-  // Allocate a buffer for storing subkey names
-  maxSubKeyNameLen++;
+  // Add the subkey name and type to the vector
+  subKeys.push_back(
+      std::make_pair(std::wstring{nameBuffer.get(), subKeyNameLen}, 0));
+}
 
-  auto nameBuffer = std::make_unique<wchar_t[]>(maxSubKeyNameLen);
+// Close the key handle
+RegCloseKey(keyHandle);
 
-  // Vector to store pairs of subkey names and types
-  std::vector<std::pair<std::wstring, DWORD>> subKeys;
-
-  // Enumerate subkeys under the registry key
-  for (DWORD index = 0; index < subKeyCount; index++) {
-    DWORD subKeyNameLen = maxSubKeyNameLen;
-
-    // Retrieve information about the specified subkey
-    retCode = ::RegEnumKeyEx(keyHandle,
-                             index,
-                             nameBuffer.get(),
-                             &subKeyNameLen,
-                             nullptr, // Reserved
-                             nullptr, // No class information
-                             nullptr, // No class size
-                             nullptr  // No last write time
-    );
-
-    // Check if the subkey information retrieval was successful
-    if (retCode != ERROR_SUCCESS) {
-      // Close the key handle and handle the error
-      RegCloseKey(keyHandle);
-      throw RegistryError{ "Cannot get subkey info from the registry",
-                           retCode };
-    }
-
-    // Add the subkey name and type to the vector
-    subKeys.push_back(
-      std::make_pair(std::wstring{ nameBuffer.get(), subKeyNameLen }, 0));
-  }
-
-  // Close the key handle
-  RegCloseKey(keyHandle);
-
-  // Return the vector containing subkey names and types
-  return subKeys;
+// Return the vector containing subkey names and types
+return subKeys;
 }
 
 std::vector<std::pair<std::wstring, DWORD>>
-RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
-{
+RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring &subKey) {
   HKEY keyHandle;
 
   // Open the specified key (root key or subkey)
@@ -235,8 +195,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
                                    nullptr, // no subkey count
                                    nullptr, // no subkey max length
                                    nullptr, // no subkey class length
-                                   &valueCount,
-                                   &maxValueNameLen,
+                                   &valueCount, &maxValueNameLen,
                                    nullptr, // no max value length
                                    nullptr, // no security descriptor
                                    nullptr  // no last write time
@@ -245,8 +204,8 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-      "RegQueryInfoKey failed while preparing for value enumeration", retCode
-    };
+        "RegQueryInfoKey failed while preparing for value enumeration",
+        retCode};
   }
 
   maxValueNameLen++;
@@ -258,10 +217,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
     // Get the name and type
     DWORD valueNameLen = maxValueNameLen;
     DWORD valueType{};
-    retCode = ::RegEnumValue(keyHandle,
-                             index,
-                             nameBuffer.get(),
-                             &valueNameLen,
+    retCode = ::RegEnumValue(keyHandle, index, nameBuffer.get(), &valueNameLen,
                              nullptr, // reserved
                              &valueType,
                              nullptr, // no data
@@ -270,16 +226,57 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring& subKey)
     if (retCode != ERROR_SUCCESS) {
       // Handle error, close the key handle and throw an exception
       RegCloseKey(keyHandle);
-      throw RegistryError{ "Cannot enumerate values: RegEnumValue failed",
-                           retCode };
+      throw RegistryError{"Cannot enumerate values: RegEnumValue failed",
+                          retCode};
     }
 
     valueInfo.push_back(std::make_pair(
-      std::wstring{ nameBuffer.get(), valueNameLen }, valueType));
+        std::wstring{nameBuffer.get(), valueNameLen}, valueType));
   }
 
   // Close the key handle
   RegCloseKey(keyHandle);
 
   return valueInfo;
+}
+
+void RegistryHelper::RegSetDword(HKEY hKey, const std::wstring &subKey,
+                                 const std::wstring &value, DWORD data) {
+  m_errorCode = ::RegSetKeyValue(hKey, subKey.c_str(), value.c_str(), REG_DWORD,
+                                 &data, sizeof(data));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set DWORD value in registry.", m_errorCode);
+  }
+}
+
+void RegistryHelper::RegSetString(HKEY hKey, const std::wstring &subKey,
+                                  const std::wstring &value,
+                                  const std::wstring &data) {
+  m_errorCode = ::RegSetKeyValue(
+      hKey, subKey.c_str(), value.c_str(), REG_SZ, data.c_str(),
+      static_cast<DWORD>((data.length() + 1) * sizeof(wchar_t)));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set string value in registry.", m_errorCode);
+  }
+}
+
+void RegistryHelper::RegSetMultiString(HKEY hKey, const std::wstring &subKey,
+                                       const std::wstring &value,
+                                       const std::vector<std::wstring> &data) {
+  // Concatenate the strings and add an extra null character at the end
+  std::wstring multiString;
+  for (const auto &str : data) {
+    multiString += str;
+    multiString.push_back(L'\0');
+  }
+  multiString.push_back(L'\0'); // Extra null character at the end
+
+  m_errorCode = ::RegSetKeyValue(
+
+      hKey, subKey.c_str(), value.c_str(), REG_MULTI_SZ, multiString.c_str(),
+      static_cast<DWORD>(multiString.length() * sizeof(wchar_t)));
+  if (m_errorCode != ERROR_SUCCESS) {
+    throw RegistryError("Cannot set multi-string value in registry.",
+                        m_errorCode);
+  }
 }
