@@ -1,0 +1,38 @@
+name: Clang Format Checker and Auto-Fixer
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  clang-format-checking:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Clang
+        run: sudo apt-get update && sudo apt-get install -y clang
+
+      - name: Install GitHub CLI
+        run: |
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+
+      - name: Check and Auto-Fix Formatting
+        run: |
+          find . \( -name "*.h" -or -name "*.c" -or -name "*.cpp" -or -name "*.hpp" -or -name "*.cc" -or -name "*.cxx" -or -name "*.hxx" -or -name "*.inl" -or -name "*.ipp" \) \
+          | xargs clang-format -i -style=file
+
+      - name: Commit changes (if any)
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
+
+          # Push changes to the current branch
+          git push origin HEAD
