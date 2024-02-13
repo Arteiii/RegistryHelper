@@ -129,48 +129,47 @@ RegistryHelper::RegEnumSubKeys(HKEY hKey, const std::wstring &subKey) {
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-        "RegQueryInfoKey failed while preparing for value enumeration",
+        "RegQueryInfoKey failed while preparing for value enumeration.",
         retCode};
-  };
-}
-
-// Allocate a buffer for storing subkey names
-maxSubKeyNameLen++;
-
-auto nameBuffer = std::make_unique<wchar_t[]>(maxSubKeyNameLen);
-
-// Vector to store pairs of subkey names and types
-std::vector<std::pair<std::wstring, DWORD>> subKeys;
-
-// Enumerate subkeys under the registry key
-for (DWORD index = 0; index < subKeyCount; index++) {
-  DWORD subKeyNameLen = maxSubKeyNameLen;
-
-  // Retrieve information about the specified subkey
-  retCode = ::RegEnumKeyEx(keyHandle, index, nameBuffer.get(), &subKeyNameLen,
-                           nullptr, // Reserved
-                           nullptr, // No class information
-                           nullptr, // No class size
-                           nullptr  // No last write time
-  );
-
-  // Check if the subkey information retrieval was successful
-  if (retCode != ERROR_SUCCESS) {
-    // Close the key handle and handle the error
-    RegCloseKey(keyHandle);
-    throw RegistryError{"Cannot get subkey info from the registry", retCode};
   }
 
-  // Add the subkey name and type to the vector
-  subKeys.push_back(
-      std::make_pair(std::wstring{nameBuffer.get(), subKeyNameLen}, 0));
-}
+  // Allocate a buffer for storing subkey names
+  maxSubKeyNameLen++;
 
-// Close the key handle
-RegCloseKey(keyHandle);
+  auto nameBuffer = std::make_unique<wchar_t[]>(maxSubKeyNameLen);
 
-// Return the vector containing subkey names and types
-return subKeys;
+  // Vector to store pairs of subkey names and types
+  std::vector<std::pair<std::wstring, DWORD>> subKeys;
+
+  // Enumerate subkeys under the registry key
+  for (DWORD index = 0; index < subKeyCount; index++) {
+    DWORD subKeyNameLen = maxSubKeyNameLen;
+
+    // Retrieve information about the specified subkey
+    retCode = ::RegEnumKeyEx(keyHandle, index, nameBuffer.get(), &subKeyNameLen,
+                             nullptr, // Reserved
+                             nullptr, // No class information
+                             nullptr, // No class size
+                             nullptr  // No last write time
+    );
+
+    // Check if the subkey information retrieval was successful
+    if (retCode != ERROR_SUCCESS) {
+      // Close the key handle and handle the error
+      RegCloseKey(keyHandle);
+      throw RegistryError{"Cannot get subkey info from the registry", retCode};
+    }
+
+    // Add the subkey name and type to the vector
+    subKeys.push_back(
+        std::make_pair(std::wstring{nameBuffer.get(), subKeyNameLen}, 0));
+  }
+
+  // Close the key handle
+  RegCloseKey(keyHandle);
+
+  // Return the vector containing subkey names and types
+  return subKeys;
 }
 
 std::vector<std::pair<std::wstring, DWORD>>
@@ -204,7 +203,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring &subKey) {
     // Handle error, close the key handle and return
     RegCloseKey(keyHandle);
     throw RegistryError{
-        "RegQueryInfoKey failed while preparing for value enumeration",
+        "RegQueryInfoKey failed while preparing for value enumeration.",
         retCode};
   }
 
@@ -226,7 +225,7 @@ RegistryHelper::RegEnumValues(HKEY hKey, const std::wstring &subKey) {
     if (retCode != ERROR_SUCCESS) {
       // Handle error, close the key handle and throw an exception
       RegCloseKey(keyHandle);
-      throw RegistryError{"Cannot enumerate values: RegEnumValue failed",
+      throw RegistryError{"Cannot enumerate values: RegEnumValue failed.",
                           retCode};
     }
 
