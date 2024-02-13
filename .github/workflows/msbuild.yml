@@ -29,7 +29,6 @@ jobs:
       with:
         name: lib-artifact
         path: |
-          RegistryHelper/RegistryHelper.h
           x64/Release/RegistryHelper.lib
           x64/Release/RegistryHelper.pdb
           x64/Release/RegistryHelper.h
