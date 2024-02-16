@@ -38,4 +38,3 @@ jobs:
           git config --local user.name "GitHub Actions"
           git diff --exit-code || (git add -A && git commit -m "Auto-fix formatting issues")
           git push
-
