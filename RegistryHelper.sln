@@ -15,6 +15,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example", "Example\Example.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RegistryInterface", "RegistryInterface\RegistryInterface.vcxproj", "{40299226-5106-4793-A43D-9BBB17111B64}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{B8AB6EE7-E785-4236-AB6D-F0F24EF1DE76}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ClangFormat.yml = .github\workflows\ClangFormat.yml
+		.github\workflows\msbuild.yml = .github\workflows\msbuild.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -42,6 +48,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B8AB6EE7-E785-4236-AB6D-F0F24EF1DE76} = {3587BC45-E1D1-4FCE-9F36-D4BD660FB262}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B012E4D-3A77-4E50-83D9-5040920D82DE}

@@ -18,19 +18,19 @@ jobs:
 
     - name: Build .lib file
       run: |
-        msbuild /p:Configuration=Release /t:RegistryHelper /p:Platform=x64 RegistryHelper.sln
+        msbuild /p:Configuration=Release /t:RegistryInterface /p:Platform=x64 RegistryHelper.sln
 
     - name: Copy .h file to Release folder
       run: |
-        copy RegistryHelper\RegistryHelper.h x64\Release
+        copy RegistryInterface\RegistryHelper.h x64\Release
 
     - name: Upload to Release
       uses: actions/upload-artifact@v2
       with:
         name: lib-artifact
         path: |
-          x64/Release/RegistryHelper.lib
-          x64/Release/RegistryHelper.pdb
+          x64/Release/RegistryInterface.lib
+          x64/Release/RegistryInterface.pdb
           x64/Release/RegistryHelper.h
 
   release:
