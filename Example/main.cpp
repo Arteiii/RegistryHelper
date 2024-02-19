@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include "../RegistryHelper.h"
+
 int
 main()
 {
@@ -62,7 +64,7 @@ main()
     }
   } catch (const RegistryError& ex) {
     std::cerr << "Registry Error: " << ex.what()
-              << " (Error Code: " << ex.ErrorCode() << ")" << std::endl;
+              << " (Error Code: " << ex.GetErrorCode() << ")" << std::endl;
   } catch (const std::exception& ex) {
     std::cerr << "Error: " << ex.what() << std::endl;
   }
