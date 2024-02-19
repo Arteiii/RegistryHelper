@@ -6,11 +6,13 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3587BC45-E1D1-4FCE-9F36-D4BD660FB262}"
 	ProjectSection(SolutionItems) = preProject
 		.clang-format = .clang-format
-		.gitignore = .gitignore
 		RegistryHelper.h = RegistryHelper.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example", "Example\Example.vcxproj", "{FD807556-B9F5-4D19-814A-FE0F51F514E1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{40299226-5106-4793-A43D-9BBB17111B64} = {40299226-5106-4793-A43D-9BBB17111B64}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RegistryInterface", "RegistryInterface\RegistryInterface.vcxproj", "{40299226-5106-4793-A43D-9BBB17111B64}"
 EndProject
@@ -22,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{1FF7BFD7-87F0-4612-8468-FB56B6A0DAF0}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection

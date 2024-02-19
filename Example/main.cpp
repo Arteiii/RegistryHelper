@@ -1,12 +1,13 @@
 #include "pch.h"
 
-#include "../RegistryHelper.h"
+#include "RegistryInterface.h"
 
 int
 main()
 {
   try {
     RegistryHelper registryHelper;
+    RegistryInterface registryInterface;
     std::wstring subKey = L"SYSTEM\\CurrentControlSet\\Control";
     HKEY hKey = HKEY_LOCAL_MACHINE;
 
@@ -59,8 +60,9 @@ main()
 
     std::wcout << L"Values: " << std::endl;
     for (const auto& valuePair : values) {
-      std::wcout << L"  " << valuePair.first << L" (Type: " << valuePair.second
-                 << L")" << std::endl;
+      std::wcout << L"  " << valuePair.first << L" (Type: "
+                 << registryInterface.GetDataTypeName(valuePair.second) << L")"
+                 << std::endl;
     }
   } catch (const RegistryError& ex) {
     std::cerr << "Registry Error: " << ex.what()

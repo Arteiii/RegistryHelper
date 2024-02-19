@@ -34,7 +34,7 @@ struct ServiceInfo
 class RegistryInterface
 {
 public:
-  RegistryInterface();
+  // RegistryInterface(); not implemented
 
   // Methods related to service information
   std::vector<ServiceInfo> EnumerateServices();
