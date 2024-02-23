@@ -4,13 +4,26 @@ This project provides a `RegistryHelper` class for accessing the Windows Registr
 
 ## Project Structure
 
-The RegistryHelper project is structured as a .lib project, offering flexibility for integration into your existing project. You also have the option to use the standalone RegistryHelper.cpp and RegistryHelper.h files directly in your project.
+### RegistryHelper
+
+RegistryHelper is a convenient utility encapsulated in a single header file named ``RegistryHelper.hpp``. This header file provides common operations for interacting with the Windows registry.
+
+### RegistryInterface
+
+RegistryInterface is a work-in-progress module that already contains predefined operations such as:
+
+- GetAutoRebootSetting
+- EnumerateServices
+...
+
+The RegistryInterface is continuously evolving, and additional functionalities will be added over time. 
+The purpose of this module is to encapsulate and provide an organized set of registry-related operations for ease of use.
 
 ## Usage
 
 ### Using as a Library
 
-Include the "RegistryHelper.h" header file in your project.  
+Include the "RegistryHelper.hpp" header file in your project.  
 Link your project with the compiled "RegistryHelper.lib" library.
 
 [.lib files as linker input](https://learn.microsoft.com/en-us/cpp/build/reference/dot-lib-files-as-linker-input?view=msvc-170)
@@ -19,7 +32,6 @@ Link your project with the compiled "RegistryHelper.lib" library.
 
 ## Using Directly
 
-Copy the "RegistryHelper.cpp" and "RegistryHelper.h" files into your project.  
 Include the "RegistryHelper.h" header file in your source files.
 
 ### Example Usage
@@ -62,10 +74,6 @@ registryHelper.RegSetDword(HKEY_LOCAL_MACHINE,
 
 Adjust the registry keys, subkeys, and value names based on your specific use case.
 
-
-## Unit Tests
-
-The project includes unit tests to ensure the correctness of the RegistryHelper functions. 
 
 ## Credits
 

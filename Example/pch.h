@@ -3,7 +3,7 @@
 
 // add headers that you want to pre-compile here
 
-#include "../RegistryHelper.h"
+#include "../RegistryHelper.hpp"
 #include <iostream>
 
 #endif // PCH_H

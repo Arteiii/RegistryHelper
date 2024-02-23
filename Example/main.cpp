@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "RegistryInterface.h"
+#include "RegistryInterface.hpp"
 
 int
 main()

@@ -6,7 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3587BC45-E1D1-4FCE-9F36-D4BD660FB262}"
 	ProjectSection(SolutionItems) = preProject
 		.clang-format = .clang-format
-		RegistryHelper.h = RegistryHelper.h
+		RegistryHelper.hpp = RegistryHelper.hpp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example", "Example\Example.vcxproj", "{FD807556-B9F5-4D19-814A-FE0F51F514E1}"

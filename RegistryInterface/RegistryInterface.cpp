@@ -2,7 +2,7 @@
 //
 #include "pch.h"
 
-#include "RegistryInterface.h"
+#include "RegistryInterface.hpp"
 
 std::wstring
 RegistryInterface::GetDataTypeName(DWORD dataType) noexcept

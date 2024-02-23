@@ -21,7 +21,7 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RegistryInterface.h">
+    <ClInclude Include="RegistryInterface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
