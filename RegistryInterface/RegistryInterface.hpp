@@ -7,8 +7,8 @@ struct RecoverySettings
   // Add other settings as needed...
 };
 
-// Define a struct to hold registry value information
-struct RegistryValue
+// RegistryKeyValue struct to store information about each registry value
+struct RegistryKeyValue
 {
   std::wstring name;
   std::wstring stringValue;
@@ -16,7 +16,7 @@ struct RegistryValue
   std::wstring dataTypeName;
 
   // Constructor to initialize members
-  RegistryValue()
+  RegistryKeyValue()
     : name()
     , stringValue()
     , dwordValue(0)
@@ -28,7 +28,7 @@ struct RegistryValue
 struct ServiceInfo
 {
   std::wstring serviceName;
-  std::vector<RegistryValue> values;
+  std::vector<RegistryKeyValue> values;
 };
 
 class RegistryInterface
@@ -44,6 +44,8 @@ public:
 
   std::wstring GetDataTypeName(DWORD dataType) noexcept;
 
+  std::vector<RegistryKeyValue> EnumerateCurrentUserValues();
+
 private:
   RegistryHelper registryHelper; // Member variable
 
@@ -52,5 +54,6 @@ private:
 
   // Private helper functions
   inline std::wstring GetAutoRebootSetting();
+
   inline std::wstring GetMiniDumpDirSetting();
 };

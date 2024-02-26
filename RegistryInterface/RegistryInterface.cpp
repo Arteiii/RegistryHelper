@@ -81,7 +81,7 @@ RegistryInterface::EnumerateServices()
           DWORD valueType = value.second;
 
           // Handle different value types
-          RegistryValue registryValue;
+          RegistryKeyValue registryValue;
           registryValue.name = valueName;
 
           if (valueType == REG_SZ) {
@@ -127,4 +127,55 @@ RegistryInterface::EnumerateServices()
   }
 
   return services;
+}
+
+std::vector<RegistryKeyValue>
+RegistryInterface::EnumerateCurrentUserValues()
+{
+  std::vector<RegistryKeyValue> values;
+
+  // Specify the registry key for CurrentUser
+  const std::wstring currentUserKey =
+    L"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion";
+
+  try {
+    // Enumerate values
+    std::vector<std::pair<std::wstring, DWORD>> valuePairs =
+      registryHelper.RegEnumValues(HKEY_CURRENT_USER, currentUserKey);
+
+    // Retrieve additional information for each value
+    for (const auto& valuePair : valuePairs) {
+      RegistryKeyValue keyValue;
+      keyValue.name = valuePair.first;
+      DWORD valueType = valuePair.second;
+
+      // Handle different value types
+      if (valueType == REG_SZ) {
+        keyValue.stringValue = registryHelper.RegGetString(
+          HKEY_CURRENT_USER, currentUserKey, valuePair.first);
+        keyValue.dwordValue = 0; // Default value for non-DWORD types
+      } else if (valueType == REG_DWORD) {
+        keyValue.stringValue = L""; // Default value for non-STRING types
+        keyValue.dwordValue = registryHelper.RegGetDword(
+          HKEY_CURRENT_USER, currentUserKey, valuePair.first);
+      } else {
+        // Handle other value types
+        keyValue.stringValue = L""; // Default value for unknown types
+        keyValue.dwordValue = 0;    // Default value for unknown types
+      }
+
+      keyValue.dataTypeName = GetDataTypeName(valueType);
+
+      // Add the value information to the vector
+      values.push_back(keyValue);
+    }
+  } catch (const std::exception& ex) {
+    // Handle the exception (e.g., log or report)
+    std::wcerr << L"Exception while enumerating CurrentUser values: "
+               << ex.what() << std::endl;
+    // Return an empty vector on exception
+    return {};
+  }
+
+  return values;
 }
