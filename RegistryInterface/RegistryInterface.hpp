@@ -8,12 +8,15 @@ struct RecoverySettings
 };
 
 // RegistryKeyValue struct to store information about each registry value
+// RegistryKeyValue struct to store information about each registry value
 struct RegistryKeyValue
 {
   std::wstring name;
   std::wstring stringValue;
   DWORD dwordValue;
   std::wstring dataTypeName;
+  std::wstring keyName;
+  std::vector<RegistryKeyValue> values;
 
   // Constructor to initialize members
   RegistryKeyValue()
@@ -21,6 +24,22 @@ struct RegistryKeyValue
     , stringValue()
     , dwordValue(0)
     , dataTypeName()
+    , keyName()
+    , values()
+  {
+  }
+
+  // Constructor to initialize members with values
+  RegistryKeyValue(const std::wstring& _name,
+                   const std::wstring& _stringValue,
+                   DWORD _dwordValue,
+                   const std::wstring& _dataTypeName)
+    : name(_name)
+    , stringValue(_stringValue)
+    , dwordValue(_dwordValue)
+    , dataTypeName(_dataTypeName)
+    , keyName()
+    , values()
   {
   }
 };

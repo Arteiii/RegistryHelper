@@ -136,38 +136,57 @@ RegistryInterface::EnumerateCurrentUserValues()
 
   // Specify the registry key for CurrentUser
   const std::wstring currentUserKey =
-    L"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion";
+    L"Software\\Microsoft\\Windows\\CurrentVersion";
 
   try {
-    // Enumerate values
-    std::vector<std::pair<std::wstring, DWORD>> valuePairs =
-      registryHelper.RegEnumValues(HKEY_CURRENT_USER, currentUserKey);
+    // Enumerate subkeys
+    std::vector<std::pair<std::wstring, DWORD>> subKeys =
+      registryHelper.RegEnumSubKeys(HKEY_CURRENT_USER, currentUserKey);
 
-    // Retrieve additional information for each value
-    for (const auto& valuePair : valuePairs) {
-      RegistryKeyValue keyValue;
-      keyValue.name = valuePair.first;
-      DWORD valueType = valuePair.second;
+    // Retrieve additional information for each subkey
+    for (const auto& subKeyPair : subKeys) {
+      RegistryKeyValue subKeyInfo;
+      subKeyInfo.name = subKeyPair.first;
+      subKeyInfo.keyName = currentUserKey;
 
-      // Handle different value types
-      if (valueType == REG_SZ) {
-        keyValue.stringValue = registryHelper.RegGetString(
-          HKEY_CURRENT_USER, currentUserKey, valuePair.first);
-        keyValue.dwordValue = 0; // Default value for non-DWORD types
-      } else if (valueType == REG_DWORD) {
-        keyValue.stringValue = L""; // Default value for non-STRING types
-        keyValue.dwordValue = registryHelper.RegGetDword(
-          HKEY_CURRENT_USER, currentUserKey, valuePair.first);
-      } else {
-        // Handle other value types
-        keyValue.stringValue = L""; // Default value for unknown types
-        keyValue.dwordValue = 0;    // Default value for unknown types
+      // Enumerate values for each subkey
+      std::vector<std::pair<std::wstring, DWORD>> valuePairs =
+        registryHelper.RegEnumValues(HKEY_CURRENT_USER,
+                                     currentUserKey + L"\\" + subKeyInfo.name);
+
+      // Retrieve additional information for each value
+      for (const auto& valuePair : valuePairs) {
+        RegistryKeyValue keyValue;
+        keyValue.name = valuePair.first;
+        DWORD valueType = valuePair.second;
+
+        // Handle different value types
+        if (valueType == REG_SZ) {
+          keyValue.stringValue = registryHelper.RegGetString(
+            HKEY_CURRENT_USER,
+            currentUserKey + L"\\" + subKeyInfo.name,
+            valuePair.first);
+          keyValue.dwordValue = 0; // Default value for non-DWORD types
+        } else if (valueType == REG_DWORD) {
+          keyValue.stringValue = L""; // Default value for non-STRING types
+          keyValue.dwordValue =
+            registryHelper.RegGetDword(HKEY_CURRENT_USER,
+                                       currentUserKey + L"\\" + subKeyInfo.name,
+                                       valuePair.first);
+        } else {
+          // Handle other value types
+          keyValue.stringValue = L""; // Default value for unknown types
+          keyValue.dwordValue = 0;    // Default value for unknown types
+        }
+
+        keyValue.dataTypeName = GetDataTypeName(valueType);
+
+        // Add the value information to the vector
+        subKeyInfo.values.push_back(keyValue);
       }
 
-      keyValue.dataTypeName = GetDataTypeName(valueType);
-
-      // Add the value information to the vector
-      values.push_back(keyValue);
+      // Add the subkey information to the vector
+      values.push_back(subKeyInfo);
     }
   } catch (const std::exception& ex) {
     // Handle the exception (e.g., log or report)

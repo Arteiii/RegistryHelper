@@ -64,6 +64,37 @@ main()
                  << registryInterface.GetDataTypeName(valuePair.second) << L")"
                  << std::endl;
     }
+
+    // Example 6: Enumerate and display values under CurrentVersion
+    std::vector<RegistryKeyValue> currentUserValues =
+      registryInterface.EnumerateCurrentUserValues();
+
+    if (currentUserValues.empty()) {
+      std::wcout << L"No values found in the specified registry key."
+                 << std::endl;
+    } else {
+      // Display the results
+      std::wcout << L"Current User Registry Values:" << std::endl;
+      for (const auto& subKeyInfo : currentUserValues) {
+        std::wcout << L"Subkey Name: " << subKeyInfo.name << std::endl;
+        std::wcout << L"Key Name: " << subKeyInfo.keyName << std::endl;
+
+        if (!subKeyInfo.values.empty()) {
+          std::wcout << L"Values:" << std::endl;
+          for (const auto& value : subKeyInfo.values) {
+            std::wcout << L"  Value Name: " << value.name << std::endl;
+            std::wcout << L"    Data Type: " << value.dataTypeName << std::endl;
+            std::wcout << L"    String Value: " << value.stringValue
+                       << std::endl;
+            std::wcout << L"    DWORD Value: " << value.dwordValue << std::endl;
+          }
+        } else {
+          std::wcout << L"No values found for this subkey." << std::endl;
+        }
+
+        std::wcout << std::endl;
+      }
+    }
   } catch (const RegistryError& ex) {
     std::cerr << "Registry Error: " << ex.what()
               << " (Error Code: " << ex.GetErrorCode() << ")" << std::endl;
