@@ -1,2 +1,10 @@
----
-BasedOnStyle: Mozilla
+BasedOnStyle: Google
+
+IncludeCategories:
+  # Priority -1000: Precompiled headers to be placed at the top
+  # Necessary for MSVC/Visual Studio to compile properly
+  - Regex: '"pch.h"'
+    Priority: -1000
+  - Regex: '"stdafx.h"'
+    Priority: -1000
+  # Other groups definitions here
